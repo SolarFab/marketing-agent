@@ -121,6 +121,38 @@ Four separations enforced in [`backend/graph/nodes/learning.py`](backend/graph/n
 
 Same discipline for sources: hit-rate is a signal, not an axe. Under-performers are flagged; the agent never silently unfollows.
 
+## Eval results at a glance
+
+Headline numbers from the recorded runs in [`docs/eval-runs/`](docs/eval-runs/) — each links to the full report with per-item detail.
+
+**Golden-set routing** (20 hand-labeled items, feature/uncertain/discard):
+
+| Run | Precision | Recall | F1 | TP / FP / FN / TN |
+|---|---|---|---|---|
+| [Baseline thresholds](docs/eval-runs/demo-baseline-run.md) | **1.00** | 0.25 | 0.40 | 3 / 0 / 9 / 8 |
+| [Lowered thresholds](docs/eval-runs/demo-thresholds-lowered-run.md) | 0.71 | **0.42** | **0.53** | 5 / 2 / 7 / 6 |
+
+The trade-off in one line: baseline never features a bad item but under-surfaces; lowering the thresholds nearly doubles recall at the cost of 2 false positives in 20. Production keeps the conservative baseline — a wrongly-featured item costs user trust, an under-surfaced one only costs a scroll to the "uncertain" bucket.
+
+**Onboarding extraction — model comparison** ([full report](docs/eval-runs/demo-models-model-comparison.md), judge: GPT-4o mini, 1–5 per dimension):
+
+| Model | Judge avg | Latency | Cost / run |
+|---|---|---|---|
+| Claude Haiku 4.5 | 4.8 | 14.5 s | $0.0059 |
+| Gemini 2.5 Flash | 4.8 | 5.4 s | $0.0008 |
+| GPT-4o mini | 4.8 | 5.4 s | $0.0006 |
+
+Quality ties at 4.8/5 across all three — extraction is prompt-bound, not model-bound — so the pick is a cost/latency call.
+
+**Onboarding extraction — prompt comparison** ([full report](docs/eval-runs/demo-prompts-prompt-comparison.md), same model, v1 vs v2):
+
+| Prompt | Judge avg | Latency | Tokens in/out |
+|---|---|---|---|
+| v1 — rule-heavy zero-shot | 4.8 | 14.4 s | 2625 / 645 |
+| v2 — few-shot with worked examples | 4.8 | 5.5 s | 2694 / 445 |
+
+Same judged quality, but the few-shot variant answers ~2.6× faster with 30% fewer output tokens — worked examples let the model commit instead of deliberating.
+
 ## Known limitations
 
 Documented on purpose — these are design gaps, not oversights:
