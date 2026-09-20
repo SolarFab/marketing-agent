@@ -128,23 +128,6 @@ Documented on purpose — these are design gaps, not oversights:
 - **Confirmed-rule matching is coarse.** A confirmed rule penalizes a candidate only when the rule's target phrase appears in the candidate's title/angle text ([`evaluate.py`](backend/graph/nodes/evaluate.py) `_pref_boost`). Mapping each reject reason code to a proper scoring signal (e.g. *off-brand* → pillar-fit weighting) is the natural next iteration.
 - **`content_history` is keyed by item id alone** ([`schema.sql`](backend/memory/schema.sql)), which is fine for the single-tenant deployment this targets but would collide across companies in a multi-tenant setup.
 
-## Course requirements coverage
-
-| Requirement | Where it lives |
-|---|---|
-| Purpose & users | [PRD §1](PRD_v2_Content_Agent.md), README head |
-| Core functionality | [`backend/graph/nodes/`](backend/graph/nodes/) + [`backend/app.py`](backend/app.py) |
-| User-friendly UI | [`frontend/src/app/`](frontend/src/app/) — 7 tabs + persistent chat rail |
-| Tools / libraries | [PRD §3](PRD_v2_Content_Agent.md) + [`backend/requirements.txt`](backend/requirements.txt) |
-| Error handling | try/except at every node boundary; publish + graph failures surfaced to UI, never silent |
-| Documentation | this README + [`docs/`](docs/) folder + every LLM prompt versioned in [`docs/prompts/`](docs/prompts/) + every eval run recorded in [`docs/eval-runs/`](docs/eval-runs/) |
-| Agent types / function calling | LangGraph orchestrator supervisor + node routing + tool calls to Tavily/Buffer/Resend |
-| Knowledge base | Company Profile + followed sources + content history; website ingestion is the enrichment path |
-| Security | dev/user split via `PUBLISH_MODE`; secrets in `.env`; input guard on orchestrator router; test branch isolation for tests |
-| Prompt vs RAG vs agents reflection | [`docs/decisions.md`](docs/decisions.md) |
-| **Medium ×2+** | ✔ external-API tool (Buffer + Resend + Tavily), ✔ long-term memory (Neon), ✔ multi-model (OpenRouter), ✔ feedback loop (learning), ✔ security guard (dev/user split), ✔ token/cost visibility (LangSmith trace URLs) |
-| **Hard ×1+** | ✔ learns-from-feedback ([`backend/graph/nodes/learning.py`](backend/graph/nodes/learning.py)), ✔ evaluation report (multi-framework — [`backend/eval/`](backend/eval/) + [`docs/eval-methodology.md`](docs/eval-methodology.md)), ✔ external-data enrichment (website ingestion), ✔ LLM observability (LangSmith auto-tracing) |
-
 ## Read next
 
 - [`docs/architecture.md`](docs/architecture.md) — the graph, the state, and how HITL interrupts work.
