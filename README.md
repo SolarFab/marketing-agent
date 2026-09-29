@@ -1,7 +1,5 @@
 # Signal — a self-marketing agent for content-constrained businesses
 
-**Course context.** Turing College — AI Engineering, Sprint 3 capstone (*Building with AI Agents*).
-**Author.** Fabian Kratz (Atomity).
 **PRD.** [`PRD_v2_Content_Agent.md`](PRD_v2_Content_Agent.md) is the authoritative spec.
 
 ## One-line pitch
@@ -169,4 +167,4 @@ Documented on purpose — these are design gaps, not oversights:
 
 ## License
 
-For evaluation as coursework only. Not for redistribution.
+All rights reserved.
